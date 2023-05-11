@@ -29,13 +29,14 @@ class Enemy extends Lightning.Component {
     const radius = 2 * GRID_ITEM_SIZE;
     let sumDamage = 0;
 
-    towerPositions.forEach((tower) => {
-      if (!tower && !tower?.x) {
+    this.parent.towers.forEach((tower) => {
+      if (!tower && !tower?.horizontalIndex) {
         return;
       }
 
-      const min = tower.x * GRID_ITEM_SIZE - radius;
-      const max = tower.x * GRID_ITEM_SIZE + GRID_ITEM_SIZE + radius;
+      const min = tower.horizontalIndex * GRID_ITEM_SIZE - radius;
+      const max =
+        tower.horizontalIndex * GRID_ITEM_SIZE + GRID_ITEM_SIZE + radius;
 
       if (currentPos < max && currentPos > min) {
         sumDamage += 5;
