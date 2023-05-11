@@ -1,10 +1,10 @@
 import { Lightning } from "@lightningjs/sdk";
 import Field from "./Field";
-
-const GRID_ITEM_SIZE = 50;
-const GRID_SIZE_HORIZONTAL = 16;
-const GRID_SIZE_VERTICAL = 7;
-const ENEMY_PATH_VERTICAL_IDX = 3;
+import {
+  GRID_ITEM_SIZE,
+  GRID_SIZE_HORIZONTAL,
+  GRID_SIZE_VERTICAL,
+} from "../utils/constants";
 
 const generateGrid = () => {
   let out = {};
@@ -18,11 +18,8 @@ const generateGrid = () => {
           y: j * GRID_ITEM_SIZE,
           mount: 0,
           type: Field,
-          label: j === ENEMY_PATH_VERTICAL_IDX ? "enemyPath" : `Grid_${i}_${j}`,
           horizontalIndex: i,
           verticalIndex: j,
-          w: GRID_ITEM_SIZE,
-          h: GRID_ITEM_SIZE,
         },
       };
     }
@@ -48,11 +45,11 @@ class Grid extends Lightning.Component {
   }
 
   override _init() {
-    const fields = generateGrid();
+    const buttons = generateGrid();
 
     this.verticalIndex = 0;
     this.horizontalIndex = 0;
-    this.tag("Grid").children = fields;
+    this.tag("Grid").children = buttons;
   }
 
   override _handleLeft() {
