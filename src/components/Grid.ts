@@ -45,11 +45,11 @@ class Grid extends Lightning.Component {
   }
 
   override _init() {
-    const buttons = generateGrid();
+    const fields = generateGrid();
 
     this.verticalIndex = 0;
     this.horizontalIndex = 0;
-    this.tag("Grid").children = buttons;
+    this.tag("Grid").children = fields;
   }
 
   override _handleLeft() {
