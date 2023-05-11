@@ -2,7 +2,8 @@ import { Lightning } from "@lightningjs/sdk";
 
 const GRID_ITEM_SIZE = 50;
 const GRID_SIZE_HORIZONTAL = 16;
-const GRID_SIZE_VERTICAL = 16;
+const GRID_SIZE_VERTICAL = 7;
+const ENEMY_PATH_VERTICAL_IDX = 3;
 
 const generateGrid = () => {
   let out = {};
@@ -16,7 +17,9 @@ const generateGrid = () => {
           y: j * GRID_ITEM_SIZE,
           mount: 0,
           type: Button,
-          label: `Grid_${i}_${j}`,
+          label: j === ENEMY_PATH_VERTICAL_IDX ? "enemyPath" : `Grid_${i}_${j}`,
+          horizontalIndex: i,
+          verticalIndex: j,
         },
       };
     }
@@ -82,15 +85,14 @@ class ExampleApp extends Lightning.Application {
   }
 
   override _getFocused() {
-    console.error(this.verticalIndex * 4 + this.horizontalIndex);
-
     return this.tag("Grid").children[
-      this.horizontalIndex * GRID_SIZE_HORIZONTAL + this.verticalIndex
+      this.horizontalIndex * GRID_SIZE_VERTICAL + this.verticalIndex
     ];
   }
 }
 
 class Button extends Lightning.Component {
+  verticalIndex = 0;
   static override _template() {
     return {
       h: GRID_ITEM_SIZE,
@@ -104,13 +106,27 @@ class Button extends Lightning.Component {
     };
   }
 
+  override _init() {
+    this.patch({
+      color:
+        this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
+          ? 0xff00ff00
+          : 0xaaff0000,
+    });
+  }
+
   set label(value: string) {
     this.tag("Label").text = value.toString();
   }
 
   override _focus() {
     this.patch({
-      smooth: { color: 0xff763ffc },
+      smooth: {
+        color:
+          this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
+            ? 0xff763ffc
+            : 0xaaff0000,
+      },
       Label: {
         smooth: { color: 0xffffffff },
       },
@@ -119,7 +135,12 @@ class Button extends Lightning.Component {
 
   override _unfocus() {
     this.patch({
-      smooth: { color: 0xffffffff },
+      smooth: {
+        color:
+          this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
+            ? 0xff00ff00
+            : 0xaaff0000,
+      },
       Label: {
         smooth: { color: 0xff000000 },
       },
