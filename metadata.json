@@ -1,0 +1,6 @@
+{
+  "name": "CTV Tower Defense",
+  "identifier": "tv.accedo.hackathon.towerdefense",
+  "version": "1.0.0",
+  "icon": "./static/icon.png"
+}
