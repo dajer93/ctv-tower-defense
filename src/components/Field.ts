@@ -1,26 +1,50 @@
 import { Lightning } from "@lightningjs/sdk";
-
-const ENEMY_PATH_VERTICAL_IDX = 3;
+import {
+  GRID_ITEM_SIZE,
+  ENEMY_PATH_VERTICAL_IDX,
+  GREEN,
+  LIGHT_GREEN,
+  RED,
+  LIGHT_RED,
+  BLACK,
+  GREY,
+  towerPositions,
+  maxNumberOfTowers,
+} from "../utils/constants";
 
 class Field extends Lightning.Component {
   verticalIndex = 0;
+  horizontalIndex = 0;
+
+  getGridItemColor = (isFocused = false) => {
+    const isTower = !!towerPositions.find(
+      ({ x, y } = {}) => this.horizontalIndex === x && this.verticalIndex === y
+    );
+
+    if (isTower) {
+      return isFocused ? GREY : BLACK;
+    }
+
+    if (!isFocused) {
+      return this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
+        ? LIGHT_GREEN
+        : LIGHT_RED;
+    }
+
+    return this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX ? GREEN : RED;
+  };
+
   static override _template() {
     return {
+      h: GRID_ITEM_SIZE,
+      w: GRID_ITEM_SIZE,
       rect: true,
-      Label: {
-        x: 10,
-        color: 0xff000000,
-        text: { fontSize: 10, text: "Label" },
-      },
     };
   }
 
   override _init() {
     this.patch({
-      color:
-        this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
-          ? 0xff00ff00
-          : 0xaaff0000,
+      color: this.getGridItemColor(),
     });
   }
 
@@ -31,10 +55,7 @@ class Field extends Lightning.Component {
   override _focus() {
     this.patch({
       smooth: {
-        color:
-          this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
-            ? 0xff763ffc
-            : 0xaaff0000,
+        color: this.getGridItemColor(true),
       },
       Label: {
         smooth: { color: 0xffffffff },
@@ -45,13 +66,33 @@ class Field extends Lightning.Component {
   override _unfocus() {
     this.patch({
       smooth: {
-        color:
-          this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
-            ? 0xff00ff00
-            : 0xaaff0000,
+        color: this.getGridItemColor(),
       },
       Label: {
         smooth: { color: 0xff000000 },
+      },
+    });
+  }
+
+  override _handleEnter() {
+    if (
+      this.verticalIndex === ENEMY_PATH_VERTICAL_IDX ||
+      towerPositions.find(
+        ({ x, y }) => this.verticalIndex === y && this.horizontalIndex === x
+      ) ||
+      towerPositions.length >= maxNumberOfTowers
+    ) {
+      return;
+    }
+
+    towerPositions.push({
+      x: this.horizontalIndex,
+      y: this.verticalIndex,
+    });
+
+    this.patch({
+      smooth: {
+        color: GREY,
       },
     });
   }
