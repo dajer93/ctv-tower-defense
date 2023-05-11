@@ -1,8 +1,8 @@
 import { Lightning } from "@lightningjs/sdk";
 
-const GRID_ITEM_SIZE = 100;
-const GRID_SIZE_HORIZONTAL = 4;
-const GRID_SIZE_VERTICAL = 4;
+const GRID_ITEM_SIZE = 50;
+const GRID_SIZE_HORIZONTAL = 16;
+const GRID_SIZE_VERTICAL = 16;
 
 const generateGrid = () => {
   let out = {};
@@ -85,7 +85,7 @@ class ExampleApp extends Lightning.Application {
     console.error(this.verticalIndex * 4 + this.horizontalIndex);
 
     return this.tag("Grid").children[
-      this.horizontalIndex * 4 + this.verticalIndex
+      this.horizontalIndex * GRID_SIZE_HORIZONTAL + this.verticalIndex
     ];
   }
 }
@@ -99,7 +99,7 @@ class Button extends Lightning.Component {
       Label: {
         x: 10,
         color: 0xff000000,
-        text: { fontSize: 18, text: "Label" },
+        text: { fontSize: 10, text: "Label" },
       },
     };
   }
