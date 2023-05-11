@@ -1,5 +1,6 @@
 import { Lightning } from "@lightningjs/sdk";
 import Grid from "./components/Grid";
+
 export class App extends Lightning.Application {
   verticalIndex = 0;
   horizontalIndex = 0;
