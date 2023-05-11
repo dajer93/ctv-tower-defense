@@ -5,11 +5,13 @@ export const initGame = () => {
   let isGameRunning = true;
 
   while (isGameRunning) {
-    if (enemyController.enemiesArray.length) {
+    if (enemyController.waveIndex > 0) {
       enemyController.spawnEnemies();
     }
 
-    if (enemyController.numberOfEnemies) {
+    enemyController.removeDeadEnemies();
+
+    if (enemyController.waveIndex <= 0) {
       isGameRunning = false;
     }
   }

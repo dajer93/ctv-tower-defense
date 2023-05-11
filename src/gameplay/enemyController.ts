@@ -14,11 +14,15 @@ export class EnemyController {
       (this.enemiesArray = []);
   }
 
-  removeEnemy(): void {
-    this.numberOfEnemies -= 1;
+  removeDeadEnemies(): void {
+    this.enemiesArray.filter((enemy) => enemy?.isAlive);
   }
 
   spawnEnemies(): void {
+    if (this.enemiesArray.length > 0) {
+      return;
+    }
+
     const spawnedEnemy = ALL_NUMBER_OF_ENEMIES / ALL_NUMBER_OF_WAVES;
 
     for (let i = 0; i < spawnedEnemy; i++) {

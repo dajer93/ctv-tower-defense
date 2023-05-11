@@ -9,7 +9,7 @@ export class Enemy {
     this.health -= amount;
   }
 
-  isDead(): boolean {
-    return this.health <= 0 ? true : false;
+  isAlive(): boolean {
+    return this.health > 0 ? true : false;
   }
 }
