@@ -4,6 +4,10 @@ import {
   GRID_ITEM_SIZE,
   GRID_SIZE_HORIZONTAL,
   GRID_SIZE_VERTICAL,
+  ENEMY_PATH_VERTICAL_IDX,
+  maxNumberOfTowers,
+  GREEN,
+  BLACK,
 } from "../utils/constants";
 
 const generateGrid = () => {
@@ -20,6 +24,10 @@ const generateGrid = () => {
           type: Field,
           horizontalIndex: i,
           verticalIndex: j,
+          fieldType: j === ENEMY_PATH_VERTICAL_IDX ? "enemyPath" : "empty",
+          signals: {
+            handleTower: "_handleTower",
+          },
         },
       };
     }
@@ -28,9 +36,15 @@ const generateGrid = () => {
   return out;
 };
 
+type Tower = {
+  horizontalIndex: number;
+  verticalIndex: number;
+};
+
 class Grid extends Lightning.Component {
   verticalIndex = 0;
   horizontalIndex = 0;
+  towers: Tower[] = [];
 
   static override _template() {
     return {
@@ -49,6 +63,7 @@ class Grid extends Lightning.Component {
 
     this.verticalIndex = 0;
     this.horizontalIndex = 0;
+    this.towers = [];
     this.tag("Grid").children = fields;
   }
 
@@ -85,9 +100,53 @@ class Grid extends Lightning.Component {
   }
 
   override _getFocused() {
+    return this.getCurrentField();
+  }
+
+  getCurrentField = () => {
     return this.tag("Grid").children[
       this.horizontalIndex * GRID_SIZE_VERTICAL + this.verticalIndex
     ];
+  };
+
+  _handleTower(tower: Tower) {
+    const isAdded = this.towers.some(
+      (t: Tower) =>
+        t.horizontalIndex === tower.horizontalIndex &&
+        t.verticalIndex === tower.verticalIndex
+    );
+
+    if (isAdded) {
+      this.towers = [
+        ...this.towers.filter(
+          (t: Tower) =>
+            t.horizontalIndex !== tower.horizontalIndex &&
+            t.verticalIndex !== tower.verticalIndex
+        ),
+      ];
+
+      this.getCurrentField().patch({
+        smooth: {
+          color: GREEN,
+        },
+        fieldType: "empty",
+      });
+
+      return;
+    }
+
+    if (this.towers.length >= maxNumberOfTowers) {
+      return;
+    }
+
+    this.towers = [...this.towers, tower];
+
+    this.getCurrentField().patch({
+      smooth: {
+        color: BLACK,
+      },
+      fieldType: "tower",
+    });
   }
 }
 
