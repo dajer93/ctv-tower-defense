@@ -9,6 +9,7 @@ import {
   GREEN,
   BLACK,
 } from "../utils/constants";
+import Enemy from "./Enemy";
 
 const generateGrid = () => {
   let out = {};
@@ -49,11 +50,26 @@ class Grid extends Lightning.Component {
   static override _template() {
     return {
       Grid: {
-        w: 800,
-        h: 800,
+        w: window.innerWidth,
+        h: window.innerHeight,
         x: 0,
         y: 0,
         mount: 0,
+      },
+      Enemy: {
+        type: Enemy,
+        towers: this.towers,
+        enemyDelay: 0,
+      },
+      Enemy2: {
+        type: Enemy,
+        towers: this.towers,
+        enemyDelay: 2,
+      },
+      Enemy3: {
+        type: Enemy,
+        towers: this.towers,
+        enemyDelay: 4,
       },
     };
   }
@@ -61,8 +77,8 @@ class Grid extends Lightning.Component {
   override _init() {
     const fields = generateGrid();
 
-    this.verticalIndex = 0;
-    this.horizontalIndex = 0;
+    this.verticalIndex = 2;
+    this.horizontalIndex = 8;
     this.towers = [];
     this.tag("Grid").children = fields;
   }
