@@ -10,6 +10,7 @@ class Enemy extends Lightning.Component {
   _enemyAnim;
   _enemyHealth = 100;
   _damageInterval;
+  enemyDelay = 0;
 
   static override _template() {
     return {
@@ -81,7 +82,9 @@ class Enemy extends Lightning.Component {
 
     this._damageInterval = setInterval(this.applyDamage.bind(this), 1000);
 
-    this._enemyAnim.start();
+    setTimeout(() => {
+      this._enemyAnim.start();
+    }, this.enemyDelay * 1000);
   }
 }
 

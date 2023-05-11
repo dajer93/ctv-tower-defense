@@ -59,6 +59,17 @@ class Grid extends Lightning.Component {
       Enemy: {
         type: Enemy,
         towers: this.towers,
+        enemyDelay: 0,
+      },
+      Enemy2: {
+        type: Enemy,
+        towers: this.towers,
+        enemyDelay: 2,
+      },
+      Enemy3: {
+        type: Enemy,
+        towers: this.towers,
+        enemyDelay: 4,
       },
     };
   }
