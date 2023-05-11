@@ -12,7 +12,7 @@ const options = {
   stage: {
     w: WIDTH,
     h: HEIGHT,
-    clearColor: 0x00000000,
+    clearColor: 0xffffffff,
     precision,
   },
 };

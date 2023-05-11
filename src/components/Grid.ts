@@ -46,27 +46,26 @@ class Grid extends Lightning.Component {
   verticalIndex = 0;
   horizontalIndex = 0;
   towers: Tower[] = [];
+  enemyIdx = 0;
 
   static override _template() {
     return {
       Grid: {
-        w: window.innerWidth,
-        h: window.innerHeight,
         x: 0,
         y: 0,
         mount: 0,
       },
-      Enemy: {
+      [`Enemy_${this.enemyIdx}`]: {
         type: Enemy,
         towers: this.towers,
         enemyDelay: 0,
       },
-      Enemy2: {
+      [`Enemy_${this.enemyIdx + 1}`]: {
         type: Enemy,
         towers: this.towers,
         enemyDelay: 2,
       },
-      Enemy3: {
+      [`Enemy_${this.enemyIdx + 2}`]: {
         type: Enemy,
         towers: this.towers,
         enemyDelay: 4,
@@ -81,6 +80,28 @@ class Grid extends Lightning.Component {
     this.horizontalIndex = 8;
     this.towers = [];
     this.tag("Grid").children = fields;
+
+    setInterval(() => {
+      this.enemyIdx += 3;
+
+      this.patch({
+        [`Enemy_${this.enemyIdx}`]: {
+          type: Enemy,
+          towers: this.towers,
+          enemyDelay: 0,
+        },
+        [`Enemy_${this.enemyIdx + 1}`]: {
+          type: Enemy,
+          towers: this.towers,
+          enemyDelay: 2,
+        },
+        [`Enemy_${this.enemyIdx + 2}`]: {
+          type: Enemy,
+          towers: this.towers,
+          enemyDelay: 4,
+        },
+      });
+    }, 10000);
   }
 
   override _handleLeft() {

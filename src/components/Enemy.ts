@@ -17,9 +17,9 @@ class Enemy extends Lightning.Component {
       Enemy: {
         w: 30,
         h: 30,
-        y: ENEMY_PATH_VERTICAL_IDX * GRID_ITEM_SIZE + 10,
+        x: -GRID_ITEM_SIZE,
         rect: true,
-        color: 0xffff0000,
+        color: `0xffff0000`,
       },
     };
   }
@@ -54,14 +54,12 @@ class Enemy extends Lightning.Component {
       this._enemyAnim.stop();
       clearInterval(this._damageInterval);
     }
-
-    console.error(this._enemyHealth);
   }
 
   override _init() {
     this._enemyHealth = 100;
     this._enemyAnim = this.tag("Enemy").animation({
-      duration: 50,
+      duration: 30 - Math.random() * 10,
       repeat: 0,
       stopMethod: "immediate",
       actions: [
@@ -74,6 +72,10 @@ class Enemy extends Lightning.Component {
           },
         },
       ],
+    });
+
+    this.patch({
+      y: ENEMY_PATH_VERTICAL_IDX * GRID_ITEM_SIZE + 10 + Math.random() * 60,
     });
 
     this._enemyAnim.on("finish", () => {

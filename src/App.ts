@@ -8,8 +8,8 @@ export class App extends Lightning.Application {
   static override _template() {
     return {
       Grid: {
-        w: 800,
-        h: 800,
+        w: window.innerWidth,
+        h: window.innerHeight,
         x: 0,
         y: 0,
         mount: 0,
