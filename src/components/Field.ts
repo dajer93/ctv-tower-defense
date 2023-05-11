@@ -12,26 +12,23 @@ import {
   maxNumberOfTowers,
 } from "../utils/constants";
 
+type FieldType = "empty" | "enemyPath" | "tower";
+
 class Field extends Lightning.Component {
   verticalIndex = 0;
   horizontalIndex = 0;
+  fieldType: FieldType = "empty";
 
   getGridItemColor = (isFocused = false) => {
-    const isTower = !!towerPositions.find(
-      ({ x, y } = {}) => this.horizontalIndex === x && this.verticalIndex === y
-    );
-
-    if (isTower) {
-      return isFocused ? GREY : BLACK;
+    switch (this.fieldType) {
+      case "tower":
+        return isFocused ? GREY : BLACK;
+      case "enemyPath":
+        return isFocused ? RED : LIGHT_RED;
+      case "empty":
+      default:
+        return isFocused ? GREEN : LIGHT_GREEN;
     }
-
-    if (!isFocused) {
-      return this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX
-        ? LIGHT_GREEN
-        : LIGHT_RED;
-    }
-
-    return this.verticalIndex !== ENEMY_PATH_VERTICAL_IDX ? GREEN : RED;
   };
 
   static override _template() {
@@ -39,6 +36,7 @@ class Field extends Lightning.Component {
       h: GRID_ITEM_SIZE,
       w: GRID_ITEM_SIZE,
       rect: true,
+      type: "empty",
     };
   }
 
@@ -75,25 +73,13 @@ class Field extends Lightning.Component {
   }
 
   override _handleEnter() {
-    if (
-      this.verticalIndex === ENEMY_PATH_VERTICAL_IDX ||
-      towerPositions.find(
-        ({ x, y }) => this.verticalIndex === y && this.horizontalIndex === x
-      ) ||
-      towerPositions.length >= maxNumberOfTowers
-    ) {
+    if (this.fieldType === "enemyPath") {
       return;
     }
 
-    towerPositions.push({
-      x: this.horizontalIndex,
-      y: this.verticalIndex,
-    });
-
-    this.patch({
-      smooth: {
-        color: GREY,
-      },
+    this.signal("handleTower", {
+      horizontalIndex: this.horizontalIndex,
+      verticalIndex: this.verticalIndex,
     });
   }
 }
