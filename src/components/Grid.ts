@@ -5,6 +5,7 @@ import {
   GRID_SIZE_HORIZONTAL,
   GRID_SIZE_VERTICAL,
 } from "../utils/constants";
+import Enemy from "./Enemy";
 
 const generateGrid = () => {
   let out = {};
@@ -35,11 +36,14 @@ class Grid extends Lightning.Component {
   static override _template() {
     return {
       Grid: {
-        w: 800,
-        h: 800,
+        w: window.innerWidth,
+        h: window.innerHeight,
         x: 0,
         y: 0,
         mount: 0,
+      },
+      Enemy: {
+        type: Enemy,
       },
     };
   }
@@ -47,9 +51,11 @@ class Grid extends Lightning.Component {
   override _init() {
     const fields = generateGrid();
 
-    this.verticalIndex = 0;
-    this.horizontalIndex = 0;
+    this.verticalIndex = 2;
+    this.horizontalIndex = 8;
     this.tag("Grid").children = fields;
+
+    // setTimeout(() => EnemyController.spawnEnemies(), 5000);
   }
 
   override _handleLeft() {
